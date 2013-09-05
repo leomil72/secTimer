@@ -1,9 +1,10 @@
 /*
 	secTimer.h - A simple timer to get the running of time computing single seconds
-	
+
 	Written by Leonardo Miliani <leonardo AT leonardomiliani DOT com>
 
 	History:
+	v. 0.4.1: fixed a severe bug - now the library computes the correct time again
 	v. 0.4:   added support for new MCUs, new clock speed and bug fixing
 	v. 0.3:   fixed a bug that affected interrupts after using stopTimer()
 	v. 0.2:   name changed to secTimer
@@ -47,7 +48,7 @@
 #elif defined (__AVR_ATtiny24__) || defined (__AVR_ATtiny44__) || defined (__AVR_ATtiny84__)
 #define ATTINYx4
 #elif defined (__AVR_ATmega640__) || defined (__AVR_ATmega1280__) || defined (__AVR_ATmega1281__) || defined (__AVR_ATmega2560__) || defined (__AVR_ATmega2561__)
-#define ATMEGAx0 
+#define ATMEGAx0
 #elif defined (__AVR_ATmega344__) || defined (__AVR_ATmega344P__) || defined (__AVR_ATmega644__) || defined (__AVR_ATmega644P__) || defined (__AVR_ATmega644PA__) || defined (__AVR_ATmega1284P__)
 #define ATMEGAx4
 #elif defined (__AVR_ATtiny2313__) || defined (__AVR_ATtiny4313__)
@@ -55,7 +56,7 @@
 #elif defined (__AVR_ATmega32U4__)
 #define ATMEGAxU
 #if (F_CPU!=16000000UL)
-#error Sorry, Atmega32U4 is supported only at 16 MHz 
+#error Sorry, Atmega32U4 is supported only at 16 MHz
 #endif
 #else
 #error Sorry, microcontroller not supported!
@@ -69,13 +70,13 @@
 
 
 class secTimer {
-	public: 
+	public:
 		//public methods
 		secTimer();
 		void startTimer();
 		void stopTimer();
 		unsigned long readTimer();
-		
+
 	private:
 		//private methods
 		void setTimer();

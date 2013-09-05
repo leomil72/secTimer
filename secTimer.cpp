@@ -41,15 +41,13 @@ secTimer::secTimer(void) {
 void secTimer::setTimer() {
     float prescaler = 0.0;
 
-    //halt all the interrupts
-    SREG &= ~(1<<SREG_I);
 #if defined (ATMEGAx8) || defined (ATMEGAx4) || defined (ATMEGAx0)
     //during setup, disable all the interrupts based on timer
     TIMSK2 &= ~((1<<TOIE2) | (1<<OCIE2A) | (1<<OCIE2B));
     //prescaler source clock set to internal Atmega clock (asynch mode)
     ASSR &= ~(1<<AS2);
     //this sets the timer to increment the counter until overflow
-    TCCR2A &= ~((1<<WGM21) | (1<<WGM20)); 
+    TCCR2A &= ~((1<<WGM21) | (1<<WGM20));
     TCCR2B &= ~(1<<WGM22);
     //the following code sets the prescaler depending on the system clock
     if (F_CPU == 16000000UL) {   // prescaler set to 64
@@ -57,8 +55,8 @@ void secTimer::setTimer() {
         TCCR2B &= ~((1<<CS21) | (1<<CS20));
         prescaler = 64.0;
     } else if ((F_CPU == 8000000UL) || (F_CPU == 4000000UL)) { // prescaler set to 32
-        TCCR2B &= ~(1<<CS22); 
-        TCCR2B |= ((1<<CS21) | (1<<CS20)); 
+        TCCR2B &= ~(1<<CS22);
+        TCCR2B |= ((1<<CS21) | (1<<CS20));
         prescaler = 32.0;
     } else if (F_CPU == 1000000UL) { // prescaler set to 8
         TCCR2B &= ~((1<<CS22) | (1<<CS20));
@@ -85,7 +83,7 @@ void secTimer::setTimer() {
     }
 #elif defined (ATTINYx4)
     //on Attinyx4 we must use the timer 0 because timer1 is a 16 bit counter
-	
+
     //during setup, disable all the interrupts based on timer 0
     TIMSK0 &= ~((1<<TOIE0) | (1<<OCIE0A) | (1<<OCIE0B));
     //normal mode: increment counter until overflow & disconnect timer from pins
@@ -108,7 +106,7 @@ void secTimer::setTimer() {
     TCCR2 &= ~((1<<WGM21) | (1<<WGM20));
     //prescaler source clock set to internal Atmega clock (synch mode)
     ASSR &= ~(1<<AS2);
-	
+
     if (F_CPU == 1600000UL) {	// prescaler set to 64
         TCCR2 |= (1<<CS22);
         TCCR2 &= ~((1<<CS21) | (1<<CS20));
@@ -134,12 +132,12 @@ void secTimer::setTimer() {
 #endif
 
     //set the initial value of the counter depending on the prescaler
-#if defined (ATMEGAxU) 
+#if defined (ATMEGAxU)
 	_starter = 65536 - (uint16_t)((float)F_CPU * 0.001 / prescaler); //for 16 MHz: 49536
 #else
     _starter = 256 - (int)((float)F_CPU * 0.001 / prescaler); //for 16 MHz: 6
 #endif
-    SREG |= (1<<SREG_I);
+    //SREG |= (1<<SREG_I);
 }
 
 
@@ -158,7 +156,7 @@ ISR (TIMER3_OVF_vect) {
     TCNT3 = _starter;
 #endif
 	_counterT++;
-	if (_counterT>999) { //1000 ms are 1 s 
+	if (_counterT>999) { //1000 ms are 1 s
 		_counterT=0;
 		_secondsT++;
 	}
@@ -172,9 +170,11 @@ ISR (TIMER3_OVF_vect) {
 
 //start the timer
 void secTimer::startTimer() {
-	SREG &= ~(1<<SREG_I);
+	SREG &= ~(1<<SREG_I); //halt all the interrupts
+	setTimer(); //sets the timer
 	_counterT = 0;
 	_secondsT = 0;
+	//starting value for the timer's counter
 #if defined (ATMEGAx8) || defined (ATMEGAx4) || defined (ATMEGAx0)
     TCNT2 = _starter;
     TIMSK2 |= (1<<TOIE2);
@@ -191,14 +191,15 @@ void secTimer::startTimer() {
     TCNT3 = _starter;
 	TIMSK3 |= (1<<TOIE3);
 #endif
-	SREG |= (1<<SREG_I);
-	_isRunning=true;
+	SREG |= (1<<SREG_I); //reactivates global interrupts
+	_isRunning = true;
 }
 
 
 //stop the timer
 void secTimer::stopTimer() {
-	SREG &= ~(1<<SREG_I);
+	SREG &= ~(1<<SREG_I); //halt all the interrupts
+	//disable the timer's overflow interrupt
 #if defined (ATMEGAx8) || defined (ATMEGAx4) || defined (ATMEGAx0)
     TIMSK2 &= ~(1<<TOIE2);
 #elif defined (ATMEGA8)
@@ -210,7 +211,7 @@ void secTimer::stopTimer() {
 #elif defined (ATMEGAxU)
 	TIMSK3 &= ~(1<<TOIE3);
 #endif
-	SREG |= (1<<SREG_I);
+	SREG |= (1<<SREG_I); //reactivates global interrupts
 	_isRunning=false;
 }
 

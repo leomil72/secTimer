@@ -10,6 +10,7 @@ device will cease to function before the library will overflow!
 ********************************************************************
 VERSION HISTORY
 
+2013/09/05 - v. 0.4.1:	fixed a severe bug - now the library computes the correct time again
 2012/11/29 - v. 0.4:	added support for new MCUs, new clock speed and bug fixing
 2012/11/27 - v. 0.3:	fixed a bug that affected interrupts after using stopTimer()
 2012/04/18 - v. 0.2:	name changed
@@ -41,7 +42,7 @@ This will permit to have both the secTimer library and the delay/millis function
 ********************************************************************
 USAGE & METHODS
 
-Include the library in your sketch with 
+Include the library in your sketch with
 #include <secTimer.h>
 
 To use the library, first you have to create an instance of the library, i.e.:
@@ -79,7 +80,7 @@ At the moment, the library only supports frequencies of 1, 4, 8, and 16 MHz due 
 ********************************************************************
 HOW IT WORKS
 
-The library sets an internal timer in counter mode to have 1 overflow interrupt exactly every 1 millisecond. 
+The library sets an internal timer in counter mode to have 1 overflow interrupt exactly every 1 millisecond.
 Every 1000 ms it increments an internal register to keep the running of the seconds.
 
 To do this, is calculates the correct starting value of the counter and the prescaler of the timer, depending on the system frequency. It also chooses the correct timer because this trick only works with 8-bit counters. On Attiny micros, the library must move the delay/millis functions on timer 1 because these micros have only 2 timers, and the 8-bit timer is timer 0.
@@ -98,6 +99,6 @@ AUTHOR
 Written by Leonardo Miliani <leonard AT leonardomiliani DOT com>
 
 ********************************************************************
-Document revision: 3rd revision - 2012/11/29
+Document revision: 4th revision - 2013/09/05
 
 ********************************************************************
