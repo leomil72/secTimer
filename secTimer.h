@@ -4,11 +4,9 @@
 	Written by Leonardo Miliani <leonardo AT leonardomiliani DOT com>
 
 	History:
-	v. 0.4.1: fixed a severe bug - now the library computes the correct time again
-	v. 0.4:   added support for new MCUs, new clock speed and bug fixing
-	v. 0.3:   fixed a bug that affected interrupts after using stopTimer()
-	v. 0.2:   name changed to secTimer
-	v. 0.1:   first release
+	
+	v. 1.0.0: added compatibility with Arduino IDE >= 1.6.7 - first stable release
+	(for a complete history of the previous versions, see the README file)
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public
@@ -26,8 +24,12 @@
 */
 
 
-#ifndef secTimer_H
-#define secTimer_H
+#ifndef secTIMER_H
+#define secTIMER_H
+
+
+//library version
+#define secTIMER_VERSION 100
 
 
 //this library is compatible both with Arduino <=0023 and Arduino >=100

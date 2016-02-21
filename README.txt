@@ -10,6 +10,7 @@ device will cease to function before the library will overflow!
 ********************************************************************
 VERSION HISTORY
 
+2016/02/20 - v. 1.0.0:  added compatibility with Arduino IDE >= 1.6.7 - first stable release
 2013/09/05 - v. 0.4.1:	fixed a severe bug - now the library computes the correct time again
 2012/11/29 - v. 0.4:	added support for new MCUs, new clock speed and bug fixing
 2012/11/27 - v. 0.3:	fixed a bug that affected interrupts after using stopTimer()
@@ -99,6 +100,6 @@ AUTHOR
 Written by Leonardo Miliani <leonard AT leonardomiliani DOT com>
 
 ********************************************************************
-Document revision: 4th revision - 2013/09/05
+Document revision: 5th revision - 2016/02/20
 
 ********************************************************************
